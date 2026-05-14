@@ -1,0 +1,15 @@
+package com.hoppen.lib.device.usb.queue;
+
+import java.io.Serializable;
+
+/**
+ * Created by tianjiangwei on 2017/9/28.
+ */
+
+public interface TaskQueueListener extends Serializable{
+    void onRunning();
+    void onCancel();
+    void onProgress(float progress,Task task);
+    void onFinish();
+
+}
