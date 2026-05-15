@@ -1,19 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
     namespace = "co.hoppen.lib.device"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "co.hoppen.lib.device"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 32
         versionCode = 1
         versionName = "1.0"
 
@@ -33,6 +30,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    kotlinOptions {
+        jvmTarget = "11" // 与 Java 编译版本保持一致
+    }
+
 }
 
 dependencies {

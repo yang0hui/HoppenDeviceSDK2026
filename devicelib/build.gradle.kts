@@ -1,15 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
     id("maven-publish")
 }
 
 android {
     namespace = "com.hoppen.lib.device"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 34
 
     publishing {
         singleVariant("release") {
@@ -20,7 +17,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 23
+        minSdk = 21
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -50,6 +47,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    kotlinOptions {
+        jvmTarget = "11" // 与 Java 编译版本保持一致
+    }
+
 }
 
 afterEvaluate {
