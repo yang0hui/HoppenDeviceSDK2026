@@ -2,6 +2,7 @@ package com.hoppen.lib.device.uart;
 
 import android.util.Log;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.hoppen.lib.device.uart.bean.ComBean;
 import com.hoppen.lib.device.uart.stick.AbsStickPackageHelper;
 import com.hoppen.lib.device.uart.stick.BaseStickPackageHelper;
@@ -67,6 +68,7 @@ public abstract class SerialHelper {
         try {
             this.mOutputStream.write(bOutArray);
         } catch (IOException e) {
+            LogUtils.e("////");
             e.printStackTrace();
         }
     }

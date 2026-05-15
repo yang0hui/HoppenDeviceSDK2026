@@ -9,7 +9,6 @@ import com.hoppen.lib.device.command.Command
 import com.hoppen.lib.device.uart.SerialHelper
 import com.hoppen.lib.device.uart.bean.ComBean
 import com.hoppen.lib.device.utils.CommandUtils
-import java.util.Timer
 import java.util.concurrent.TimeUnit
 
 /**
@@ -19,6 +18,8 @@ import java.util.concurrent.TimeUnit
 class UartConnection(private val serialConfig: SerialConfig,val serialListener: SerialListener) : AbsConnection() {
 
     private var serialHelper: SerialHelper? = null
+
+    private var connectStatus = false
 
     private var connected = false
 
@@ -40,10 +41,14 @@ class UartConnection(private val serialConfig: SerialConfig,val serialListener: 
             return elapsed >= 6000
         }
 
-        override fun onSuccess(status: Boolean) {
-            LogUtils.e(status)
-            if (!connected)serialListener.onDisconnected()
-            connected = status
+        override fun onSuccess(timeout: Boolean) {
+            if (timeout){
+                if (connected){
+                    if (connectStatus)serialListener.onDisconnected()
+                    connectStatus = false
+                    connected = false
+                }
+            }
         }
     }
 
@@ -53,20 +58,22 @@ class UartConnection(private val serialConfig: SerialConfig,val serialListener: 
         try {
             serialHelper = object : SerialHelper(serialConfig.serialPath!!, serialConfig.baudRate) {
                 override fun onDataReceived(comBean: ComBean) {
-                    LogUtils.e(comBean.toString())
                     CommandUtils.decodingData(comBean.bRec)?.let {strings->
                         for (data in strings) {
+                            LogUtils.e(data)
                             if (data != "System-OnLine") {
                                 serialListener.onReceive(data)
                             }else {
                                 lastOnlineTime = System.currentTimeMillis()
-                                if (!connected)serialListener.onConnected()
+                                if (!connectStatus)serialListener.onConnected()
+                                connectStatus = true
                                 connected = true
                             }
                         }
                     }
                 }
             }
+            LogUtils.e(serialHelper?.toString())
             serialHelper?.open()
 
             lastOnlineTime = System.currentTimeMillis()
@@ -74,7 +81,6 @@ class UartConnection(private val serialConfig: SerialConfig,val serialListener: 
             ThreadUtils.executeBySingleAtFixRate(loopSend,2, 5,TimeUnit.SECONDS)
 
             ThreadUtils.executeBySingleAtFixRate(loopCheckStatus,1, 1,TimeUnit.SECONDS)
-
 
         }catch (e : Exception){
             LogUtils.e(e.toString())
@@ -90,6 +96,7 @@ class UartConnection(private val serialConfig: SerialConfig,val serialListener: 
     }
 
     override fun write(data: ByteArray) {
+//        LogUtils.e(data)
         serialHelper?.send(data)
     }
 }

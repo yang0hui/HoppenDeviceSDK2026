@@ -28,27 +28,15 @@ class MainActivity : AppCompatActivity(), SerialListener {
         setContentView(R.layout.activity_main)
 
         controller = SerialManager.getController(this,
-            SerialConfig(SerialType.UART,9600,""),
+            SerialConfig(SerialType.UART,9600,"/dev/ttyS1"),
             this)
 
         SerialPortFinder().run {
-            this.allDevices.forEach {
-                LogUtils.e(it)
-            }
-            this.allDevicesPath.forEach {
-                LogUtils.e(it)
-            }
+//            this.allDevices.forEach {
+//                LogUtils.e(it)
+//            }
+            LogUtils.e(this.allDevicesPath)
         }
-
-        val a = object : SerialHelper("/dev/ttyS3", 9600) {
-            override fun onDataReceived(comBean: ComBean) {
-                comBean.let {
-                    LogUtils.d("收到数据: ${String(it.bRec)}")
-                }
-            }
-        }
-        a.open()
-
 
     }
 
@@ -67,8 +55,8 @@ class MainActivity : AppCompatActivity(), SerialListener {
     private fun send(send: String) {
         findViewById<AppCompatTextView>(R.id.tv_callback).run {
             this.text = send + "\n" + this.getText().toString()
-            findViewById<ScrollView>(R.id.scrollview).fullScroll(View.FOCUS_UP)
         }
+        findViewById<ScrollView>(R.id.scrollview).fullScroll(View.FOCUS_UP)
     }
 
     private fun add(num: Int): Int {
@@ -153,6 +141,7 @@ class MainActivity : AppCompatActivity(), SerialListener {
     fun wskt001(view: View?) {
         //if (controller!=null)controller.getDeviceCode();
         if (controller != null) {
+            controller.getDeviceCode()
             //controller.customInstruction(new byte[]{1});
             //controller.cleanGunOut(true);
             //controller.test("/storage/emulated/0/.wax/WaxHairFunctionMachine/apk/护理系统1.2.0.apk")
@@ -162,22 +151,23 @@ class MainActivity : AppCompatActivity(), SerialListener {
 
     fun wskt006(view: View?) {
         if (controller != null) {
-//            controller.selectHandle("WSKT006");
-            controller.cleanGunRinse(true)
+            controller.selectHandle("WSKT006");
+//            controller.cleanGunRinse(true)
         }
     }
 
     fun wskt010(view: View?) {
         if (controller != null) {
 //            controller.selectHandle("WSKT010");
-            controller.cleanGunRinse(false)
+//            controller.cleanGunRinse(false)
+            controller.getDeviceCode()
         }
     }
 
     fun wskt002(view: View?) {
         if (controller != null) {
 //            controller.getUsbVerInfo();
-            controller.cleanGunOut(false)
+            controller.getDeviceCode()
         }
     }
 

@@ -27,8 +27,5 @@ object ConnectionFactory {
                 UartConnection(serialConfig,serialListener)
             }
         }
-
     }
-
-
 }

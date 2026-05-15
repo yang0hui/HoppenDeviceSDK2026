@@ -433,6 +433,7 @@ public class ConnectMcuDeviceTask extends Task{
                   LogUtils.e(device);
                }catch (Exception e){
                }
+               LogUtils.e(device);
                if (device.contains("W003-8888-NURT-")
                        || device.contains("W003-0003-NURT-"))return true;
             }

@@ -1,6 +1,7 @@
 package com.hoppen.lib.device.api
 
 import androidx.appcompat.app.AppCompatActivity
+import com.blankj.utilcode.util.LogUtils
 import com.hoppen.lib.device.connection.AbsConnection
 import com.hoppen.lib.device.connection.ConnectionFactory
 import com.hoppen.lib.device.connection.UsbConnection
@@ -19,10 +20,13 @@ class SerialClient {
     )
 
     fun goConnect(appCompatActivity: AppCompatActivity, config: SerialConfig, serialListener: SerialListener) {
+        try {
+            connection = ConnectionFactory.createConnection(appCompatActivity,config,serialListener)
 
-        connection = ConnectionFactory.createConnection(appCompatActivity,config,serialListener)
-
-        connection?.open()
+            connection?.open()
+        }catch (e: Exception){
+            LogUtils.e(e.toString())
+        }
     }
 
     fun close() {
@@ -30,11 +34,19 @@ class SerialClient {
     }
 
     fun onStart(){
-        (connection as UsbConnection?)?.onStart()
+        connection?.let {
+            if (it is UsbConnection){
+                it.onStart()
+            }
+        }
     }
 
     fun onStop(){
-        (connection as UsbConnection?)?.onStop()
+        connection?.let {
+            if (it is UsbConnection){
+                it.onStop()
+            }
+        }
     }
 
     private fun send(data: ByteArray) {
