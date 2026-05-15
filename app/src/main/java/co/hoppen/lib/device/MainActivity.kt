@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), SerialListener {
         setContentView(R.layout.activity_main)
 
         controller = SerialManager.getController(this,
-            SerialConfig(SerialType.UART,9600,"/dev/ttyS1"),
+            SerialConfig(SerialType.USB,9600,"/dev/ttyS1"),
             this)
 
         SerialPortFinder().run {

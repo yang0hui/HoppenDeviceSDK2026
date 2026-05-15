@@ -10,6 +10,7 @@ import com.hoppen.lib.device.uart.SerialHelper
 import com.hoppen.lib.device.uart.bean.ComBean
 import com.hoppen.lib.device.utils.CommandUtils
 import java.util.concurrent.TimeUnit
+import kotlin.math.log
 
 /**
  * Created by CoderHui on 2026/5/12.

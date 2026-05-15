@@ -21,7 +21,8 @@ class SerialClient {
 
     fun goConnect(appCompatActivity: AppCompatActivity, config: SerialConfig, serialListener: SerialListener) {
         try {
-            connection = ConnectionFactory.createConnection(appCompatActivity,config,serialListener)
+
+            connection = ConnectionFactory.createConnection(appCompatActivity,config,MainThreadSerialListener(serialListener))
 
             connection?.open()
         }catch (e: Exception){

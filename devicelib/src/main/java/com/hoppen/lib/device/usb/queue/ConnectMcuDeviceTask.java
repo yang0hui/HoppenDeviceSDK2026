@@ -98,6 +98,7 @@ public class ConnectMcuDeviceTask extends Task{
    private byte[] readData(ConnectMcuInfo connectMcuInfo){
       final byte[] data = new byte[128];
       int cnt = connectMcuInfo.usbDeviceConnection.bulkTransfer(connectMcuInfo.epIn, data, data.length, 300);
+      LogUtils.e(cnt);
       if (cnt!=-1){
          byte[] bytes = Arrays.copyOfRange(data, 0, cnt);
          return bytes;
@@ -423,15 +424,18 @@ public class ConnectMcuDeviceTask extends Task{
    private boolean discernDevice(byte [] data,ConnectMcuInfo connectMcuInfo){
       try {
          boolean success = sendInstructions(data,connectMcuInfo);
+         LogUtils.e(success);
          if (success){
             byte[] bytes = readData(connectMcuInfo);
             if (bytes!=null){
                String device="";
                try {
                   device = new String(bytes);
+                  LogUtils.e(device);
                   device = device.substring(device.indexOf("<[") + 2, device.lastIndexOf("]>")).trim();
                   LogUtils.e(device);
                }catch (Exception e){
+                  LogUtils.e(e.toString());
                }
                LogUtils.e(device);
                if (device.contains("W003-8888-NURT-")
@@ -439,6 +443,7 @@ public class ConnectMcuDeviceTask extends Task{
             }
          }
       }catch (Exception e){
+         LogUtils.e(e.toString());
       }
       ///*************************
       return false;

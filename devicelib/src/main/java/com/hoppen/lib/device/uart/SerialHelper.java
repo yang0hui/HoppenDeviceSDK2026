@@ -115,6 +115,7 @@ public abstract class SerialHelper {
 //                    }
 
                 } catch (Throwable e) {
+                    LogUtils.e("************"+e.toString());
                      if (e.getMessage() != null) {
                         Log.e("error", e.getMessage());
                     }
