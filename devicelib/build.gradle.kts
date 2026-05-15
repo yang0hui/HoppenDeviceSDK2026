@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    id("maven-publish")
 }
 
 android {
@@ -7,6 +8,14 @@ android {
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
+        }
+    }
+
+    publishing {
+        singleVariant("release") {
+            // 可选：同时发布源代码和文档
+            withSourcesJar()
+            withJavadocJar()
         }
     }
 
@@ -42,6 +51,21 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.github.yang0hui"
+                artifactId = "devicelib"
+                version = "DeviceSDK1.0.0"
+            }
+        }
+    }
+}
+
+
 
 dependencies {
     implementation(libs.androidx.core.ktx)
