@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), SerialListener {
         setContentView(R.layout.activity_main)
 
         controller = SerialManager.getController(this,
-            SerialConfig(SerialType.USB,9600,"/dev/ttyS1"),
+            SerialConfig(SerialType.UART,9600,"/dev/ttyS1"),
             this)
 
         SerialPortFinder().run {
@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity(), SerialListener {
     fun wskt002(view: View?) {
         if (controller != null) {
 //            controller.getUsbVerInfo();
-            controller.getDeviceCode()
+            controller.getUsbVerInfo()
         }
     }
 
